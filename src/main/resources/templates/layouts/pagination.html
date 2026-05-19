@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="card-footer clearfix" th:fragment="pagination(link, currentPage, totalPages)">
+
+    <ul class="pagination justify-content-center">
+        <!-- Previous page link -->
+        <li class="page-item" th:if="${currentPage > 0}">
+            <a class="page-link" th:href="@{${link}(page=${currentPage - 1})}">«</a>
+        </li>
+        <!-- First page link -->
+        <li class="page-item" th:if="${currentPage >= 3  and totalPages > 6}">
+            <a class="page-link" th:href="@{${link}(page=0)}">1</a>
+        </li>
+
+        <!-- Ellipsis if needed before current range -->
+        <li class="page-item" th:if="${currentPage > 3 and totalPages > 6}">
+            <span class="page-link">...</span>
+        </li>
+
+
+        <!-- If current page is near the beginning -->
+        <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+            th:if="${currentPage >= 0 and currentPage <= 5 and i >= 0 and i <= 5 and totalPages <= 6}"
+            class="page-item"
+            th:classappend="${currentPage == i} ? ' active' : ''">
+            <a class="page-link one " th:href="@{${link}(page=${i})}" th:text="${i + 1}"></a>
+        </li>
+
+
+        <!-- If current page is near the beginning -->
+        <li th:each="i : ${#numbers.sequence(0, 5)}"
+            th:if="${currentPage >= 0 and currentPage < 3 and i >= 0 and i < 5 and totalPages > 6}"
+            class="page-item"
+            th:classappend="${currentPage == i} ? ' active' : ''">
+            <a class="page-link two" th:href="@{${link}(page=${i})}" th:text="${i + 1}"></a>
+        </li>
+
+        <!-- General case: pages around current page -->
+        <li th:each="i : ${#numbers.sequence(currentPage - 2, currentPage + 2)}"
+            th:if="${currentPage > 1 and currentPage <= totalPages - 3  and i >= currentPage - 2 and i <= currentPage + 2 and totalPages > 6}"
+            class="page-item"
+            th:classappend="${currentPage == i} ? ' active' : ''">
+            <a class="page-link three" th:href="@{${link}(page=${i})}" th:text="${i + 1}"></a>
+        </li>
+
+        <!-- If current page is near the end -->
+        <li th:each="i : ${#numbers.sequence(totalPages - 5, totalPages)}"
+            th:if="${currentPage > totalPages - 3 and  i >= totalPages - 5 and i < totalPages  and totalPages > 6}"
+            class="page-item"
+            th:classappend="${currentPage == i} ? ' active' : ''">
+            <a class="page-link three" th:href="@{${link}(page=${i})}" th:text="${i + 1}"></a>
+        </li>
+
+
+        <!-- Ellipsis if needed after current range -->
+        <li class="page-item" th:if="${currentPage < totalPages - 3 and totalPages > 6}">
+            <span class="page-link">...</span>
+        </li>
+
+        <!-- Last page link -->
+        <li class="page-item" th:if="${currentPage < totalPages - 3 and totalPages > 6}">
+            <a class="page-link" th:href="@{${link}(page=${totalPages - 1})}" th:text="${totalPages}">»»</a>
+        </li>
+        <!-- Next page link -->
+        <li class="page-item" th:if="${currentPage < totalPages - 1}">
+            <a class="page-link" th:href="@{${link}(page=${currentPage + 1})}">»</a>
+        </li>
+    </ul>
+</div>
+
+</body>
+</html>

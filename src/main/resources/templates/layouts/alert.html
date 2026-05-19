@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Подключаем необходимые стили и скрипты -->
+    <link rel="stylesheet" th:href="@{/webjars/AdminLTE/3.2.0/plugins/toastr/toastr.min.css}"/>
+</head>
+<body>
+<!-- Блок для отображения сообщений -->
+<div th:fragment="alert">
+    <div th:if="${alert != null}" class="alert alert-dismissible" th:classappend="${alert.type}">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h5><i class="icon fas" th:classappend="${alert.icon}"></i> <span th:text="${alert.title}"></span></h5>
+        <span th:text="${alert.message}"></span>
+    </div>
+        <script>
+            $(document).ready(function() {
+                // Инициализация toastr
+                toastr.options = {
+                    "closeButton": true,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                };
+
+                // Показ сообщения, если alert существует
+                if (typeof alert !== 'undefined' && alert !== null) {
+                    toastr[alert.type](alert.message, alert.title);
+                }
+            });
+        </script>
+    </div>
+</body>
+</html>

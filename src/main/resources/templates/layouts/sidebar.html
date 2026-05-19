@@ -1,0 +1,57 @@
+    <aside class="main-sidebar sidebar-dark-primary elevation-4" th:fragment="sidebar(activePage)">
+        <!-- Brand Logo -->
+
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <!-- Sidebar user panel (optional) -->
+               <!-- Sidebar Menu -->
+            <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                    <li class="nav-item">
+                        <a data-th-href="@{/admin/page/label/header}" class="nav-link" th:classappend="${activePage == 'header'} ? ' active' : ''" >
+                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <p>
+                                Хедер
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a data-th-href="@{/admin/page/index}" class="nav-link" th:classappend="${activePage == 'page'} ? ' active' : ''" >
+                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <p>
+                                Страницы
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a data-th-href="@{/admin/footer/index}" class="nav-link" th:classappend="${activePage == 'footer'} ? ' active' : ''" >
+                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <p>
+                                Футер
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a data-th-href="@{/admin/parser/page}" class="nav-link" th:classappend="${activePage == 'parser_page'} ? ' active' : ''" >
+                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <p>
+                                Парсер страниц
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a data-th-href="@{/admin/parser/footer}" class="nav-link" th:classappend="${activePage == 'parser_footer'} ? ' active' : ''" >
+                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <p>
+                                Парсер Футера
+                            </p>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- /.sidebar-menu -->
+        </div>
+        <!-- /.sidebar -->
+    </aside>
+

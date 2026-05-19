@@ -5,9 +5,11 @@ spring:
     ollama:
       ollama:
         chat:
-          model: gemma4
-        base-url: http://localhost:11434
+          model: MODEL
+        base-url: BASE_URL
   datasource:
     url: URL
     username: USERNAME
     password: PASSWORD
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
