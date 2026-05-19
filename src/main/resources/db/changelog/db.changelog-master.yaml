@@ -1,3 +1,5 @@
 databaseChangeLog:
   - include:
       file: db/changelog/01-init.sql
+  - include:
+      file: db/changelog/02-add_active_column_in_chat_table.sql

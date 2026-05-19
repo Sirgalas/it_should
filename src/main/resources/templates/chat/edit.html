@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-<head th:replace="layouts/header :: header(${title})"></head>
+<head th:replace="admin/layouts/header :: header(${page.title})"></head>
+
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
     <!-- Navbar -->
-    <nav class="main-header navbar navbar-expand navbar-white navbar-light" th:replace="layouts/topnawbar :: topnavbar ">
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light" th:replace="admin/layouts/topnawbar :: topnavbar ">
 
     </nav>
     <!-- /.navbar -->
 
     <!-- Main Sidebar Container -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4" th:replace="layouts/sidebar :: sidebar(${sidebar})"></aside>
+    <aside class="main-sidebar sidebar-dark-primary elevation-4" th:replace="admin/layouts/sidebar :: sidebar(${activePage})"></aside>
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -19,45 +20,47 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0" th:text="${title}"></h1>
+                        <h1 class="m-0" th:text="${chat.name}">Title</h1>
                     </div>
                     <!--<div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a data-th-href="@{/admin/index}">Home</a></li>
-                            <li class="breadcrumb-item active">Карточки по умолчанию</li>
-                        </ol> /.col -- >
-                    </div>< !-- /.col -->
+                            <li class="breadcrumb-item"><a data-th-href="@{/admin/index}" >Админка</a></li>
+                            <li class="breadcrumb-item"><a data-th-href="@{/admin/cards/index}" >Карточки по умолчанию</a></li>
+                            <li class="breadcrumb-item active">Создать</li>
+                        </ol> /.col --
+                </div>< !-- /.col -->
                 </div><!-- /.container-fluid -->
             </div>
-        <!-- /.content-header -->
         </div>
+        <!-- /.content-header -->
+
         <!-- Main content -->
         <div class="content">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12">
-                        <div th:replace="layouts/alert :: alert"></div>
-                        <div class="card" >
-                            <div class="card-header">
-                                Приветствую
+                        <div class="card card-primary">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="card-title mb-0" th:text="${chat.name}">Название чата</h5>
                             </div>
-                                <div class="col-12 card-body">
-                                    <form th:action="@{/chat/new}" method="post" enctype="multipart/form-data">
-                                        <div class="card-body">
-                                            <div class="form-group row">
-                                                <label for="content" class="col-sm-2 col-form-label">Введите вопрос</label>
-                                                <div class="col-sm-10">
-                                                    <textarea type="text"  class="form-control" id="content" placeholder="Что хочешь узнать" required></textarea>
-                                                </div>
-                                            </div>
+                            <form th:action="@{/chat/{id}(id=${id})}"  enctype="multipart/form-data" method="post"  th:object="${chat}">
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <label for="name" class="col-sm-2 col-form-label">Введите название чата</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Введите название" required>
+                                            <small class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Ошибка</small>
                                         </div>
-                                        <div class="card-footer text-right">
-                                            <button type="submit" class="btn btn-primary">Создать</button>
-                                        </div>
-                                    </form>
+                                    </div>
                                 </div>
+                                <div class="card-footer text-right">
+                                    <button type="submit" class="btn btn-primary">Изменить</button>
+                                </div>
+                            </form>
+
                         </div>
                     </div>
+
                 </div>
                 <!-- /.row -->
             </div>
@@ -75,6 +78,7 @@
 
 </div>
 <!-- ./wrapper -->
+
 <!-- REQUIRED SCRIPTS -->
 <div>
     <!-- jQuery -->
@@ -90,9 +94,11 @@
     <!-- adminlte dashboard demo (This is only for demo purposes) -->
     <script th:src="@{/webjars/AdminLTE/3.2.0/dist/js/pages/dashboard.js}"></script>
     <script th:src="@{/webjars/AdminLTE/3.2.0/plugins/select2/js/select2.full.min.js}"></script>
+    <script th:src="@{/webjars/AdminLTE/3.2.0/plugins/summernote/summernote-bs4.min.js}"></script>
     <script>
         $(function () {
             $('.select2').select2()
+            $('.summernote').summernote()
         });
     </script>
 </div>

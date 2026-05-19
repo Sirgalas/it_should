@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="admin/layouts/header :: header(${page.title})"></head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light" th:replace="admin/layouts/topnawbar :: topnavbar ">
+    </nav>
+    <aside class="main-sidebar sidebar-dark-primary elevation-4" th:replace="admin/layouts/sidebar :: sidebar(${activePage})"></aside>
+    <div class="content-wrapper">
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0" th:text="${page.title}">Название страницы</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row">
+                                    <h2 class="col-12" th:text="${page.title}">Название </h2>
+                                    <div class="col-3">
+                                        <a data-th-href="@{/chat/edit/{id}(id=${id})}" class="btn btn-primary">
+                                            <i class="fa-solid fa-pencil"></i>
+                                        </a>
+                                    </div>
+                                    <div class="col-3">
+                                        <form th:action="@{/chat/delete/{id}(id=${id})}" method="post" style="display: inline;">
+                                            <button type="submit" class="btn btn-danger" role="button">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-10 ">
+                                <div class="card card-primary card-outline direct-chat direct-chat-primary">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Direct Chat</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="direct-chat-messages">
+                                            <!-- Исправленный блок -->
+                                            <div class="direct-chat-msg" th:each="content : ${chat.contents}" th:classappend="${content.role.name() == 'USER'} ? 'right' : ''">
+                                                <div class="direct-chat-infos clearfix">
+                                                    <!-- Для USER имя справа, для ASSISTANT слева -->
+                                                    <span th:if="${content.role.name() == 'USER'}" class="direct-chat-name float-right" th:text="${content.role.getRole()}"></span>
+                                                    <span th:if="${content.role.name() != 'USER'}" class="direct-chat-name float-left" th:text="${content.role.getRole()}"></span>
+                                                </div>
+                                                <!-- Добавил иконку пользователя/робота для наглядности -->
+                                                  <div class="direct-chat-text" th:text="${content.content}"></div>
+                                            </div>
+                                            <!-- /.direct-chat-msg -->
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <form action="#" method="post">
+                                            <div class="input-group">
+                                                <input type="text" name="message" placeholder="Type Message ..." class="form-control">
+                                                <span class="input-group-append">
+                                                  <button type="submit" class="btn btn-primary">Send</button>
+                                                </span>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    <script th:src="@{/webjars/AdminLTE/3.2.0/plugins/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/AdminLTE/3.2.0/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <!-- Исправлена опечатка th:rc -> th:src -->
+    <script th:src="@{/webjars/AdminLTE/3.2.0/dist/js/demo.js}"></script>
+    <script th:src="@{/webjars/AdminLTE/3.2.0/dist/js/pages/dashboard.js}"></script>
+</div>
+</body>
+</html>

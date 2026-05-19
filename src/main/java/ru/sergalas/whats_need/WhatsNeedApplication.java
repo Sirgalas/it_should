@@ -10,8 +10,8 @@ public class WhatsNeedApplication {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(WhatsNeedApplication.class, args);
-        ChatClient chatClient = context.getBean(ChatClient.class);
-        System.out.println(chatClient.prompt().user("дай текст гимна Amazing Grace на русском языке ").call().content());
+        //ChatClient chatClient = context.getBean(ChatClient.class);
+        //System.out.println(chatClient.prompt().user("дай текст гимна Amazing Grace на русском языке ").call().content());
     }
 
 

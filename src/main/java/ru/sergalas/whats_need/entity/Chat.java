@@ -28,10 +28,16 @@ public class Chat {
     @CreationTimestamp
     LocalDateTime createdAt;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    Boolean active;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true,mappedBy = "chat")
     private List<EntryChat> history = new ArrayList<>();
 
     public void setId() {
         this.id = UUID.randomUUID();
+    }
+
+    public String getUrl(){
+        return id.toString();
     }
 }

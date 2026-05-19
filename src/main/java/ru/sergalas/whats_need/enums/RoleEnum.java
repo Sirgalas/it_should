@@ -13,8 +13,12 @@ public enum RoleEnum {
         this.role = role;
     }
 
-    public static RoleEnum getRole(String roleName) {
+    public static RoleEnum getRoleByName(String roleName) {
         return Arrays.stream(RoleEnum.values()).filter(role -> role.role.equals(roleName)).findFirst().orElseThrow();
+    }
+
+    public String getRole() {
+        return role;
     }
 
 }
