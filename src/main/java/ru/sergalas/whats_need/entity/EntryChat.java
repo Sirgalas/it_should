@@ -31,8 +31,5 @@ public class EntryChat {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @ManyToOne()
-    Chat chat;
-
 
 }

@@ -1,9 +1,7 @@
 package ru.sergalas.whats_need.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.stringtemplate.v4.ST;
@@ -16,6 +14,9 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "chat")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Chat {
@@ -30,8 +31,13 @@ public class Chat {
 
     Boolean active;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true,mappedBy = "chat")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn()
     private List<EntryChat> history = new ArrayList<>();
+
+    public void addEntry(EntryChat entry) {
+        this.history.add(entry);
+    }
 
     public void setId() {
         this.id = UUID.randomUUID();
