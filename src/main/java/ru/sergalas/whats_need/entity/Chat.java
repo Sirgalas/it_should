@@ -32,7 +32,7 @@ public class Chat {
     Boolean active;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn()
+    @JoinColumn(name = "chat_id")
     private List<EntryChat> history = new ArrayList<>();
 
     public void addEntry(EntryChat entry) {
@@ -43,7 +43,4 @@ public class Chat {
         this.id = UUID.randomUUID();
     }
 
-    public String getUrl(){
-        return id.toString();
-    }
 }

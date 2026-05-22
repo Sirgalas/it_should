@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-<head th:replace="admin/layouts/header :: header(${page.title})"></head>
+<head th:replace="layouts/header :: header(${chat.title})"></head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
-    <nav class="main-header navbar navbar-expand navbar-white navbar-light" th:replace="admin/layouts/topnawbar :: topnavbar ">
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light" th:replace="layouts/topnawbar :: topnavbar ">
     </nav>
-    <aside class="main-sidebar sidebar-dark-primary elevation-4" th:replace="admin/layouts/sidebar :: sidebar(${activePage})"></aside>
+    <aside class="main-sidebar sidebar-dark-primary elevation-4" th:replace="layouts/sidebar :: sidebar(${sidebar})"></aside>
     <div class="content-wrapper">
         <div class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0" th:text="${page.title}">Название страницы</h1>
+                        <h1 class="m-0" th:text="${chat.title}">Название страницы</h1>
                     </div>
                 </div>
             </div>
@@ -23,7 +23,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="row">
-                                    <h2 class="col-12" th:text="${page.title}">Название </h2>
+                                    <h2 class="col-12" th:text="${chat.title}">Название </h2>
                                     <div class="col-3">
                                         <a data-th-href="@{/chat/edit/{id}(id=${id})}" class="btn btn-primary">
                                             <i class="fa-solid fa-pencil"></i>

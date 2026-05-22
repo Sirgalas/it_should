@@ -3,11 +3,14 @@ package ru.sergalas.whats_need.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.sergalas.whats_need.data.CreateChatData;
 import ru.sergalas.whats_need.data.EditChatData;
 import ru.sergalas.whats_need.data.SidebarData;
 import ru.sergalas.whats_need.services.ChatService;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,9 +33,9 @@ public class ChatController {
     }
 
     @PostMapping("new")
-    public String newChat()
+    public String newChat(@ModelAttribute @Valid CreateChatData data)
     {
-        return "redirect:/chat/"+UUID.randomUUID();
+        return "redirect:/chat/%s".formatted(service.create(data).toString());
     }
 
     @GetMapping("edit/{id}")

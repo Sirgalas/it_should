@@ -1,29 +1,30 @@
 package ru.sergalas.whats_need.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ru.sergalas.whats_need.data.CreateChatData;
 import ru.sergalas.whats_need.data.EditChatData;
 import ru.sergalas.whats_need.data.OneData;
 import ru.sergalas.whats_need.data.SidebarData;
 import ru.sergalas.whats_need.entity.Chat;
 import ru.sergalas.whats_need.exception.ChatNotFoundException;
-import ru.sergalas.whats_need.mapper.OneChatMapper;
-import ru.sergalas.whats_need.mapper.SidebarChatMapper;
+import ru.sergalas.whats_need.mapper.ChatMapper;
 import ru.sergalas.whats_need.repository.ChatRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
 public class ChatService {
 
-    private final SidebarChatMapper mapper;
+    private final ChatMapper mapper;
     private final ChatRepository repository;
-    private final OneChatMapper oneMapper;
 
     public List<SidebarData> getSideBar() {
-        return repository.findAll().stream().map(mapper::toData).toList();
+        return repository.findAll(Sort.by(Sort.Direction.DESC, "createdAt")).stream().map(mapper::toSidebarData).toList();
     }
 
     public EditChatData getEditChat(UUID id) {
@@ -32,16 +33,31 @@ public class ChatService {
 
     public void editChat( UUID id,EditChatData data) {
         Chat chat = repository.findById(id).orElseThrow(() -> new ChatNotFoundException("чат не найден"));
-        chat.setTitle(data.name());
+        chat.setTitle(data.title());
         repository.save(chat);
     }
 
     public OneData getOneData(UUID id) {
-        return oneMapper.toData(repository.findById(id).orElseThrow(() -> new ChatNotFoundException("чат не найден")));
+        return mapper.toOneData(repository.findById(id).orElseThrow(() -> new ChatNotFoundException("чат не найден")));
     }
 
     public void deleteChat(UUID id) {
         Chat chat = repository.findById(id).orElseThrow(() -> new ChatNotFoundException("чат не найден"));
         repository.delete(chat);
+    }
+
+
+    public UUID create(CreateChatData data) {
+        Chat chat = mapper.toEntityCreate(data);
+        UUID id = UUID.randomUUID();
+        chat.setId(id);
+        chat.setActive(true);
+        repository.save(chat);
+        Chat active = repository.findByActive(true).orElse(null);
+        if(active != null) {
+            active.setActive(false);
+            repository.save(active);
+        }
+        return id;
     }
 }

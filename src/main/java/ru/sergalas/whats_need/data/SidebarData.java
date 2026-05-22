@@ -4,8 +4,7 @@ import java.util.UUID;
 
 public record SidebarData(
         UUID id,
-        String name,
-        String url,
+        String title,
         Boolean active
 ) {
 

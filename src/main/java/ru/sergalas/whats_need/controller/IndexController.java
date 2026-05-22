@@ -3,9 +3,11 @@ package ru.sergalas.whats_need.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.sergalas.whats_need.data.CreateChatData;
 import ru.sergalas.whats_need.data.SidebarData;
 import ru.sergalas.whats_need.services.ChatService;
 
@@ -13,7 +15,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping()
+@RequestMapping("/")
 public class IndexController {
     private final ChatService service;
 
@@ -23,7 +25,8 @@ public class IndexController {
     }
 
     @GetMapping()
-    public String index() {
+    public String index(Model model) {
+        model.addAttribute("chat", new CreateChatData(null));
         return "chat/index";
     }
 }

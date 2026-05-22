@@ -9,19 +9,18 @@
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                     <li class="nav-item">
-                        <a data-th-href="@{/chat/create}" class="nav-link" >
+                        <a data-th-href="@{/}" class="nav-link" >
                             <i class="nav-icon fas fa-tachometer-alt"></i>
                             <p>Создать новый чат</p>
                         </a>
                     </li>
-                    <li class="nav-item" th:each="item : ${sidebar}")>
-                        <a data-th-href="@{/chat/{id}(id=item.url)}" class="nav-link col-md-8" th:classappend="${item.active} ? ' active' : ''" >
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p th:text="${item.name}"></p>
+                    <li class="nav-item row" th:each="item : ${sidebar}">
+                        <a data-th-href="@{/chat/{id}(id=${item.id})}" class="nav-link col-md-8" th:classappend="${item.active} ? ' active' : ''" >
+                            <p th:text="${item.title}"></p>
                         </a>
-                        <form th:action="@{/chat/delete/{id}(id=${item.id})}" class="col-md-3" method="post" style="display: inline;">
-                            <button type="submit" class="btn btn-danger" role="button">
-                                <i class="fa-solid fa-trash"></i>
+                        <form th:action="@{/chat/delete/{id}(id=${item.id})}" class="col-md-3 nav-item" method="post" style="display: inline;">
+                            <button type="submit" class="btn" role="button">
+                                <i class="fa-solid fa-trash text-white"></i>
                             </button>
                         </form>
                     </li>

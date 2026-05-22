@@ -42,12 +42,12 @@
                                 Приветствую
                             </div>
                                 <div class="col-12 card-body">
-                                    <form th:action="@{/chat/new}" method="post" enctype="multipart/form-data">
+                                    <form th:action="@{/chat/new}" method="post" th:object="${chat}">
                                         <div class="card-body">
                                             <div class="form-group row">
-                                                <label for="content" class="col-sm-2 col-form-label">Введите вопрос</label>
+                                                <label for="name" class="col-sm-2 col-form-label">Введите вопрос</label>
                                                 <div class="col-sm-10">
-                                                    <textarea type="text"  class="form-control" id="content" placeholder="Что хочешь узнать" required></textarea>
+                                                    <input type="text"  class="form-control" id="name" th:field="*{title}" placeholder="как назовем" required>
                                                 </div>
                                             </div>
                                         </div>

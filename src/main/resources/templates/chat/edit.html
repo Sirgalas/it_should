@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-<head th:replace="admin/layouts/header :: header(${page.title})"></head>
+<head th:replace="layouts/header :: header(${chat.title})"></head>
 
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
     <!-- Navbar -->
-    <nav class="main-header navbar navbar-expand navbar-white navbar-light" th:replace="admin/layouts/topnawbar :: topnavbar ">
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light" th:replace="layouts/topnawbar :: topnavbar ">
 
     </nav>
     <!-- /.navbar -->
 
     <!-- Main Sidebar Container -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4" th:replace="admin/layouts/sidebar :: sidebar(${activePage})"></aside>
+    <aside class="main-sidebar sidebar-dark-primary elevation-4" th:replace="layouts/sidebar :: sidebar(${sidebar})"></aside>
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -20,7 +20,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0" th:text="${chat.name}">Title</h1>
+                        <h1 class="m-0" th:text="${chat.title}">Title</h1>
                     </div>
                     <!--<div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -41,15 +41,15 @@
                     <div class="col-md-12">
                         <div class="card card-primary">
                             <div class="card-header bg-primary text-white">
-                                <h5 class="card-title mb-0" th:text="${chat.name}">Название чата</h5>
+                                <h5 class="card-title mb-0" th:text="${chat.title}">Название чата</h5>
                             </div>
                             <form th:action="@{/chat/{id}(id=${id})}"  enctype="multipart/form-data" method="post"  th:object="${chat}">
                                 <div class="card-body">
                                     <div class="form-group row">
                                         <label for="name" class="col-sm-2 col-form-label">Введите название чата</label>
                                         <div class="col-sm-10">
-                                            <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Введите название" required>
-                                            <small class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Ошибка</small>
+                                            <input type="text" th:field="*{title}" class="form-control" id="name" placeholder="Введите название" required>
+                                            <small class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Ошибка</small>
                                         </div>
                                     </div>
                                 </div>
