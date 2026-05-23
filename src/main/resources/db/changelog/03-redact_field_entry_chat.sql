@@ -6,4 +6,4 @@ ALTER TABLE entry_chat
 
 -- changeset Sergalas:1779450844783-2
 ALTER TABLE entry_chat
-    ADD type_enum LONGTEXT NULL;
+    ADD content TEXT NULL;

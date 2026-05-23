@@ -1,9 +1,14 @@
 package ru.sergalas.whats_need.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.messages.AssistantMessage;
+import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.chat.model.Generation;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import ru.sergalas.whats_need.data.*;
 import ru.sergalas.whats_need.entity.Chat;
 import ru.sergalas.whats_need.exception.ChatNotFoundException;
@@ -72,4 +77,28 @@ public class ChatService {
     }
 
 
+    public SseEmitter sendQuestion(PromptData data, UUID id) {
+        Chat chat = repository.findById(id).orElseThrow(() -> new ChatNotFoundException("чат не найден"));
+        entryService.addChatEntry(chat, data.prompt(), USER);
+        StringBuilder answer = new StringBuilder();
+        SseEmitter sseEmitter = new SseEmitter(0L);
+        chatClient
+            .prompt()
+            .user(data.prompt())
+            .stream()
+            .chatResponse()
+            .subscribe(response -> getToken(response, sseEmitter,answer),
+                sseEmitter::completeWithError,
+                () -> entryService.addChatEntry(chat, answer.toString(), ASSISTANT)
+            );
+
+        return sseEmitter;
+    }
+
+    @SneakyThrows
+    private static void getToken(ChatResponse response, SseEmitter sseEmitter, StringBuilder answer){
+        String output = response.getResult().getOutput().getText();
+        sseEmitter.send(output);
+        answer.append(output);
+    }
 }

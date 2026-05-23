@@ -25,7 +25,7 @@ public class EntryChat {
     @Column(name = "id", nullable = false)
     UUID id;
 
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(columnDefinition = "TEXT")
     String content;
 
     @Enumerated(EnumType.STRING)

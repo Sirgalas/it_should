@@ -59,11 +59,11 @@
                                         </div>
                                     </div>
                                     <div class="card-footer">
-                                        <form th:action="@{/chat/{id}/entry(id=${id})}" method="post" th:object="${promtData}">
+                                        <form th:action="@{/chat/{id}/entry(id=${id})}" method="post" id="chat-form" th:object="${promtData}">
                                             <div class="input-group">
                                                 <textarea type="text" th:field="*{prompt}" placeholder="Задавай вопрос" class="form-control"></textarea>
                                                 <span class="input-group-append">
-                                                  <button type="submit" class="btn btn-primary">Send</button>
+                                                  <button type="button" class="btn btn-primary">Send</button>
                                                 </span>
                                             </div>
                                         </form>
@@ -80,8 +80,8 @@
 <div>
     <script th:src="@{/webjars/AdminLTE/3.2.0/plugins/jquery/jquery.min.js}"></script>
     <script th:src="@{/webjars/AdminLTE/3.2.0/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
-    <!-- Исправлена опечатка th:rc -> th:src -->
-    <script th:src="@{/webjars/AdminLTE/3.2.0/dist/js/demo.js}"></script>
+    <script th:src="@{/js/app.js}"></script>
+    <script th:src="@{/js/marked.min.js}"></script>
     <script th:src="@{/webjars/AdminLTE/3.2.0/dist/js/pages/dashboard.js}"></script>
 </div>
 </body>
