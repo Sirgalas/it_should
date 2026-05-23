@@ -3,10 +3,10 @@ package ru.sergalas.whats_need.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.sergalas.whats_need.data.CreateChatData;
 import ru.sergalas.whats_need.data.EditChatData;
+import ru.sergalas.whats_need.data.PromptData;
 import ru.sergalas.whats_need.data.SidebarData;
 import ru.sergalas.whats_need.services.ChatService;
 
@@ -29,6 +29,8 @@ public class ChatController {
     @GetMapping("{id}")
     public String one(@PathVariable UUID id, Model model) {
         model.addAttribute("chat", service.getOneData(id));
+        model.addAttribute("promtData", new PromptData(null));
+        model.addAttribute("id", id);
         return "chat/one";
     }
 
@@ -55,6 +57,12 @@ public class ChatController {
     public  String delete(@PathVariable UUID id) {
         service.deleteChat(id);
         return "redirect:/";
+    }
+
+    @PostMapping("{id}/entry")
+    public String setTalk(@ModelAttribute PromptData data, @PathVariable UUID id) {
+        service.sentQuestion(data, id);
+        return "redirect:/chat/%s".formatted(id);
     }
 
 }

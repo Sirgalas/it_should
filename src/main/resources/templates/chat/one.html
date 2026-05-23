@@ -41,16 +41,16 @@
                             <div class="col-md-10 ">
                                 <div class="card card-primary card-outline direct-chat direct-chat-primary">
                                     <div class="card-header">
-                                        <h3 class="card-title">Direct Chat</h3>
+                                        <h3 class="card-title" th:text="${chat.title}">Direct Chat</h3>
                                     </div>
                                     <div class="card-body">
                                         <div class="direct-chat-messages">
                                             <!-- Исправленный блок -->
-                                            <div class="direct-chat-msg" th:each="content : ${chat.contents}" th:classappend="${content.role.name() == 'USER'} ? 'right' : ''">
+                                            <div class="direct-chat-msg" th:each="content : ${chat.history}" th:classappend="${content.roleEnum.name() == 'USER'} ? 'right' : ''">
                                                 <div class="direct-chat-infos clearfix">
                                                     <!-- Для USER имя справа, для ASSISTANT слева -->
-                                                    <span th:if="${content.role.name() == 'USER'}" class="direct-chat-name float-right" th:text="${content.role.getRole()}"></span>
-                                                    <span th:if="${content.role.name() != 'USER'}" class="direct-chat-name float-left" th:text="${content.role.getRole()}"></span>
+                                                    <span th:if="${content.roleEnum.name() == 'USER'}" class="direct-chat-name float-right" th:text="${content.roleEnum.getRole()}"></span>
+                                                    <span th:if="${content.roleEnum.name() != 'USER'}" class="direct-chat-name float-left" th:text="${content.roleEnum.getRole()}"></span>
                                                 </div>
                                                 <!-- Добавил иконку пользователя/робота для наглядности -->
                                                   <div class="direct-chat-text" th:text="${content.content}"></div>
@@ -59,9 +59,9 @@
                                         </div>
                                     </div>
                                     <div class="card-footer">
-                                        <form action="#" method="post">
+                                        <form th:action="@{/chat/{id}/entry(id=${id})}" method="post" th:object="${promtData}">
                                             <div class="input-group">
-                                                <input type="text" name="message" placeholder="Type Message ..." class="form-control">
+                                                <textarea type="text" th:field="*{prompt}" placeholder="Задавай вопрос" class="form-control"></textarea>
                                                 <span class="input-group-append">
                                                   <button type="submit" class="btn btn-primary">Send</button>
                                                 </span>
