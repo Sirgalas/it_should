@@ -3,9 +3,8 @@ package ru.sergalas.whats_need.services;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.messages.AssistantMessage;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.model.ChatResponse;
-import org.springframework.ai.chat.model.Generation;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -14,6 +13,7 @@ import ru.sergalas.whats_need.entity.Chat;
 import ru.sergalas.whats_need.exception.ChatNotFoundException;
 import ru.sergalas.whats_need.mapper.ChatMapper;
 import ru.sergalas.whats_need.repository.ChatRepository;
+import ru.sergalas.whats_need.util.PostgrerChatMemory;
 
 
 import java.util.List;
@@ -30,6 +30,7 @@ public class ChatService {
     private final ChatRepository repository;
     private final EntryService entryService;
     private final ChatClient chatClient;
+    private final PostgrerChatMemory postgrerChatMemory;
 
     public List<SidebarData> getSideBar() {
         return repository.findAll(Sort.by(Sort.Direction.DESC, "createdAt")).stream().map(mapper::toSidebarData).toList();
@@ -71,25 +72,29 @@ public class ChatService {
 
     public void sentQuestion(PromptData data, UUID id) {
         Chat chat = repository.findById(id).orElseThrow(() -> new ChatNotFoundException("чат не найден"));
-        entryService.addChatEntry(chat, data.prompt(),USER);
+//        entryService.addChatEntry(chat, data.prompt(),USER);
         String answer = chatClient.prompt().user(data.prompt()).call().content();
-        entryService.addChatEntry(chat, answer,ASSISTANT);
+//        entryService.addChatEntry(chat, answer,ASSISTANT);
     }
 
 
     public SseEmitter sendQuestion(PromptData data, UUID id) {
         Chat chat = repository.findById(id).orElseThrow(() -> new ChatNotFoundException("чат не найден"));
-        entryService.addChatEntry(chat, data.prompt(), USER);
+//        entryService.addChatEntry(chat, data.prompt(), USER);
         StringBuilder answer = new StringBuilder();
         SseEmitter sseEmitter = new SseEmitter(0L);
         chatClient
-            .prompt()
-            .user(data.prompt())
+            .prompt(data.prompt())
+            .advisors(MessageChatMemoryAdvisor
+                    .builder(postgrerChatMemory)
+                    .conversationId(String.valueOf(id))
+                    .build()
+            )
             .stream()
             .chatResponse()
             .subscribe(response -> getToken(response, sseEmitter,answer),
-                sseEmitter::completeWithError,
-                () -> entryService.addChatEntry(chat, answer.toString(), ASSISTANT)
+                sseEmitter::completeWithError/*,
+                () -> entryService.addChatEntry(chat, answer.toString(), ASSISTANT)*/
             );
 
         return sseEmitter;

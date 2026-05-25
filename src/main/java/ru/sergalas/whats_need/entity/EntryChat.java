@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.ai.chat.messages.Message;
 import org.springframework.stereotype.Component;
 import ru.sergalas.whats_need.enums.RoleEnum;
 import ru.sergalas.whats_need.enums.TypeEnum;
@@ -36,5 +37,9 @@ public class EntryChat {
 
     @ManyToOne
     private Chat chat;
+
+    public Message toMessage() {
+        return roleEnum.getMessage(content);
+    }
 
 }
