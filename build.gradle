@@ -20,7 +20,7 @@ repositories {
 }
 
 ext {
-    set('springAiVersion', "1.0.0-M6")
+    set('springAiVersion', "1.0.0")
 }
 
 dependencyManagement {
@@ -34,8 +34,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.ai:spring-ai-ollama-spring-boot-starter'
-    implementation 'org.springframework.ai:spring-ai-pgvector-store-spring-boot-starter'
+    implementation 'org.springframework.ai:spring-ai-starter-model-chat-memory-repository-jdbc'
+    implementation 'org.springframework.ai:spring-ai-advisors-vector-store'
+    implementation 'org.springframework.ai:spring-ai-starter-model-ollama'
+    implementation 'org.springframework.ai:spring-ai-starter-vector-store-pgvector'
     implementation 'org.webjars:select2:4.0.13'
     implementation 'org.webjars:AdminLTE:3.2.0'
     implementation 'org.webjars.npm:icheck-bootstrap:3.0.1'

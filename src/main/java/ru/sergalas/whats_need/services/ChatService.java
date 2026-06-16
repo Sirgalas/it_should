@@ -3,7 +3,7 @@ package ru.sergalas.whats_need.services;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -13,14 +13,10 @@ import ru.sergalas.whats_need.entity.Chat;
 import ru.sergalas.whats_need.exception.ChatNotFoundException;
 import ru.sergalas.whats_need.mapper.ChatMapper;
 import ru.sergalas.whats_need.repository.ChatRepository;
-import ru.sergalas.whats_need.util.PostgrerChatMemory;
 
 
 import java.util.List;
 import java.util.UUID;
-
-import static ru.sergalas.whats_need.enums.RoleEnum.USER;
-import static ru.sergalas.whats_need.enums.RoleEnum.ASSISTANT;
 
 @RequiredArgsConstructor
 @Service
@@ -28,9 +24,7 @@ public class ChatService {
 
     private final ChatMapper mapper;
     private final ChatRepository repository;
-    private final EntryService entryService;
     private final ChatClient chatClient;
-    private final PostgrerChatMemory postgrerChatMemory;
 
     public List<SidebarData> getSideBar() {
         return repository.findAll(Sort.by(Sort.Direction.DESC, "createdAt")).stream().map(mapper::toSidebarData).toList();
@@ -85,11 +79,7 @@ public class ChatService {
         SseEmitter sseEmitter = new SseEmitter(0L);
         chatClient
             .prompt(data.prompt())
-            .advisors(MessageChatMemoryAdvisor
-                    .builder(postgrerChatMemory)
-                    .conversationId(String.valueOf(id))
-                    .build()
-            )
+            .advisors(advisorSpec -> advisorSpec.param(ChatMemory.CONVERSATION_ID,id))
             .stream()
             .chatResponse()
             .subscribe(response -> getToken(response, sseEmitter,answer),

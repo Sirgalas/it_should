@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import ru.sergalas.whats_need.enums.RoleEnum;
 import ru.sergalas.whats_need.enums.TypeEnum;
 
+import javax.management.relation.Role;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -37,6 +38,13 @@ public class EntryChat {
 
     @ManyToOne
     private Chat chat;
+
+    public static EntryChat toEntryChat(Message message) {
+        return EntryChat.builder()
+            .roleEnum(RoleEnum.getRoleByName(message.getMessageType().getValue()))
+            .content(message.getText())
+            .build();
+    }
 
     public Message toMessage() {
         return roleEnum.getMessage(content);
