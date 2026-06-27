@@ -31,7 +31,7 @@ public class LoadedDocumentService implements CommandLineRunner {
 
         resources.stream()
                 .map(resource -> Pair.of(resource,getContendHash(resource)))
-                .filter(pair -> repository.existsByFilenameAndContentHash(
+                .filter(pair -> !repository.existsByFilenameAndContentHash(
                         pair.getFirst().getFilename(),
                         pair.getSecond())
                 )
