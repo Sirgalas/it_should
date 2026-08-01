@@ -38,10 +38,11 @@ public class PostgresChatMemory implements ChatMemory {
     @Override
     public List<Message> get(String conversationId) {
         Chat chat = getChat(conversationId);
+        Long massagesToSkip = Long.valueOf(Math.max(0,chat.getHistory().size() - maxMessages));
         return chat.
                 getHistory()
                 .stream()
-                .sorted(Comparator.comparing(EntryChat::getCreatedAt).reversed())
+                .skip(massagesToSkip)
                 .map(EntryChat::toMessage)
                 .limit(maxMessages)
                 .toList();

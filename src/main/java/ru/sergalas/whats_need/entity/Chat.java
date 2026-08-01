@@ -31,6 +31,7 @@ public class Chat {
 
     Boolean active;
 
+    @OrderBy("createdAt ASC")
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "chat_id")
     private List<EntryChat> history = new ArrayList<>();

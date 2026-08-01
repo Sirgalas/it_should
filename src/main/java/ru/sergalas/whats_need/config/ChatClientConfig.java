@@ -3,8 +3,10 @@ package ru.sergalas.whats_need.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.client.advisor.api.Advisor;
 import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.ollama.api.OllamaOptions;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.context.annotation.Bean;
@@ -32,13 +34,19 @@ public class ChatClientConfig {
 
     @Bean
     public ChatClient chatClient(ChatClient.Builder builder) {
-        return builder.defaultAdvisors(getHistoryAdvisor(),getRagAdvisor()).build();
+        return builder.defaultAdvisors(
+                getHistoryAdvisor(),
+                SimpleLoggerAdvisor.builder().build(),
+                getRagAdvisor()
+        )
+        .defaultOptions(OllamaOptions.builder().temperature(0.3).topP(0.7).topK(20).repeatPenalty(1.1).build())
+        .build();
     }
 
     private Advisor getRagAdvisor() {
         return QuestionAnswerAdvisor.builder(vectorStore)
                 .promptTemplate(PROMPT_TEMPLATE)
-                .searchRequest(SearchRequest.builder().topK(4).build())
+                .searchRequest(SearchRequest.builder().topK(4).similarityThreshold(0.7).build())
                 .build();
     }
 

@@ -83,8 +83,8 @@ public class ChatService {
             .stream()
             .chatResponse()
             .subscribe(response -> getToken(response, sseEmitter,answer),
-                sseEmitter::completeWithError/*,
-                () -> entryService.addChatEntry(chat, answer.toString(), ASSISTANT)*/
+                sseEmitter::completeWithError,
+                sseEmitter::complete
             );
 
         return sseEmitter;
