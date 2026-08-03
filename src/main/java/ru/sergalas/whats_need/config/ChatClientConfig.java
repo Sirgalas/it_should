@@ -12,6 +12,7 @@ import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
+import ru.sergalas.whats_need.advisers.expansion.ExpansionQueryAdviser;
 import ru.sergalas.whats_need.repository.ChatRepository;
 import ru.sergalas.whats_need.util.PostgresChatMemory;
 import org.springframework.ai.chat.prompt.PromptTemplate;
@@ -35,23 +36,31 @@ public class ChatClientConfig {
     @Bean
     public ChatClient chatClient(ChatClient.Builder builder) {
         return builder.defaultAdvisors(
-                getHistoryAdvisor(),
-                SimpleLoggerAdvisor.builder().build(),
-                getRagAdvisor()
+                ExpansionQueryAdviser.builder().order(0).build(),
+                getHistoryAdvisor(1),
+                SimpleLoggerAdvisor.builder().order(2).build(),
+                getRagAdvisor(3),
+                SimpleLoggerAdvisor.builder().order(4).build()
         )
-        .defaultOptions(OllamaOptions.builder().temperature(0.3).topP(0.7).topK(20).repeatPenalty(1.1).build())
+        .defaultOptions(OllamaOptions.builder()
+                .temperature(0.3)
+                .topP(0.7)
+                .topK(4)
+                .repeatPenalty(1.1)
+                .build())
         .build();
     }
 
-    private Advisor getRagAdvisor() {
+    private Advisor getRagAdvisor(int order) {
         return QuestionAnswerAdvisor.builder(vectorStore)
                 .promptTemplate(PROMPT_TEMPLATE)
                 .searchRequest(SearchRequest.builder().topK(4).similarityThreshold(0.7).build())
+                .order(order)
                 .build();
     }
 
-    private Advisor getHistoryAdvisor() {
-        return MessageChatMemoryAdvisor.builder(getChatMemory()).build();
+    private Advisor getHistoryAdvisor(int order) {
+        return MessageChatMemoryAdvisor.builder(getChatMemory()).order(order).build();
     }
 
     private ChatMemory getChatMemory() {

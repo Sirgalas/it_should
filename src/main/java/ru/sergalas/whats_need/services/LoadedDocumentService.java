@@ -37,7 +37,7 @@ public class LoadedDocumentService implements CommandLineRunner {
                 )
                 .forEach(pair -> {
                     List<Document> documents = new TextReader(pair.getFirst()).get();
-                    TokenTextSplitter textSplitter = TokenTextSplitter.builder().withChunkSize(500).build();
+                    TokenTextSplitter textSplitter = TokenTextSplitter.builder().withChunkSize(200).build();
                     List<Document> chunks = textSplitter.apply(documents);
                     vectorStore.accept(chunks);
                     LoadedDocument loadedDocument = LoadedDocument.builder()
