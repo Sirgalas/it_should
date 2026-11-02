@@ -6,6 +6,7 @@ import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.client.advisor.api.Advisor;
 import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.ollama.api.OllamaOptions;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
 import ru.sergalas.whats_need.advisers.expansion.ExpansionQueryAdviser;
+import ru.sergalas.whats_need.advisers.rag.RagAdvisor;
 import ru.sergalas.whats_need.repository.ChatRepository;
 import ru.sergalas.whats_need.util.PostgresChatMemory;
 import org.springframework.ai.chat.prompt.PromptTemplate;
@@ -23,6 +25,7 @@ public class ChatClientConfig {
 
     private final ChatRepository chatRepository;
     private final VectorStore vectorStore;
+    private final ChatModel chatModel;
 
     private static final PromptTemplate PROMPT_TEMPLATE = new PromptTemplate(
             "{query}\n\n" +
@@ -36,10 +39,10 @@ public class ChatClientConfig {
     @Bean
     public ChatClient chatClient(ChatClient.Builder builder) {
         return builder.defaultAdvisors(
-                ExpansionQueryAdviser.builder().order(0).build(),
+                ExpansionQueryAdviser.builder(chatModel).order(0).build(),
                 getHistoryAdvisor(1),
                 SimpleLoggerAdvisor.builder().order(2).build(),
-                getRagAdvisor(3),
+                RagAdvisor.build(vectorStore).order(3).build(),
                 SimpleLoggerAdvisor.builder().order(4).build()
         )
         .defaultOptions(OllamaOptions.builder()
