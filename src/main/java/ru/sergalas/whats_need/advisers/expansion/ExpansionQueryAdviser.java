@@ -1,6 +1,7 @@
 package ru.sergalas.whats_need.advisers.expansion;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NonNull;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.ChatClientRequest;
@@ -16,8 +17,8 @@ import java.util.Map;
 
 @Builder
 public class ExpansionQueryAdviser implements BaseAdvisor {
-    @NonNull
-    private Integer order;
+    @Getter
+    private int order;
     private ChatClient chatClient;
     private ChatModel chatModel;
 
@@ -90,8 +91,4 @@ public class ExpansionQueryAdviser implements BaseAdvisor {
         return chatClientResponse;
     }
 
-    @Override
-    public int getOrder() {
-        return 0;
-    }
 }

@@ -54,7 +54,8 @@ public class PostgresChatMemory implements ChatMemory {
     }
 
     private Chat getChat(String conversationId) {
-        return chatRepository.findById(UUID.fromString(conversationId)).orElseThrow(() -> new ChatNotFoundException("чат не найден"));
+        return chatRepository.findByIdWithHistory(UUID.fromString(conversationId))
+                .orElseThrow(() -> new ChatNotFoundException("чат не найден"));
     }
 }
 

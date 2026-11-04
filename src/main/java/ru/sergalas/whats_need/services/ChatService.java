@@ -16,6 +16,7 @@ import ru.sergalas.whats_need.repository.ChatRepository;
 
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -93,7 +94,9 @@ public class ChatService {
     @SneakyThrows
     private static void getToken(ChatResponse response, SseEmitter sseEmitter, StringBuilder answer){
         String output = response.getResult().getOutput().getText();
-        sseEmitter.send(output);
+        if (output != null && !output.isEmpty()) {
+            sseEmitter.send(Map.of("text", output));
+        }
         answer.append(output);
     }
 }

@@ -1,6 +1,7 @@
 package ru.sergalas.whats_need.advisers.rag;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NonNull;
 import org.springframework.ai.chat.client.ChatClientRequest;
 import org.springframework.ai.chat.client.ChatClientResponse;
@@ -27,18 +28,15 @@ public class RagAdvisor implements BaseAdvisor {
             """).build();
 
     private VectorStore vectorStore;
-    @NonNull
-    private Integer order;
+
+    @Getter
+    private int order;
 
     public static RagAdvisorBuilder build(VectorStore vectorStore) {
         return new RagAdvisorBuilder().vectorStore(vectorStore);
 
     }
 
-    @Override
-    public int getOrder() {
-        return 0;
-    }
 
     @Override
     public ChatClientRequest before(ChatClientRequest chatClientRequest, AdvisorChain advisorChain) {
@@ -58,6 +56,6 @@ public class RagAdvisor implements BaseAdvisor {
 
     @Override
     public ChatClientResponse after(ChatClientResponse chatClientResponse, AdvisorChain advisorChain) {
-        return null;
+        return chatClientResponse;
     }
 }

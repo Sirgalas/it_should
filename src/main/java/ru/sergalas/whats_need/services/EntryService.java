@@ -18,13 +18,19 @@ public class EntryService {
     private final EntryChatRepository repository;
 
     public void addChatEntry(Chat chat, String prompt, RoleEnum roleEnum) {
-        EntryChat entryChat = EntryChat.builder().chat(chat).content(prompt).roleEnum(roleEnum).build();
+        EntryChat entryChat = EntryChat
+                .builder()
+                .chat(chat)
+                .content(prompt)
+                .roleEnum(roleEnum)
+                .build();
         repository.save(entryChat);
     }
 
     public EntryChat addChatEntry(Chat chat, Message message) {
         return repository.save(
                 EntryChat.builder()
+                .chat(chat)
                 .roleEnum(RoleEnum.getRoleByName(message.getMessageType().getValue()))
                 .content(message.getText())
                 .build()
