@@ -44,7 +44,7 @@ public class RagAdvisor implements BaseAdvisor {
         String queryToRag = chatClientRequest.context().getOrDefault(QuestionEnum.ENRICHED_QUESTION.getValue(),originalUserQuestion).toString();
         List<Document> documents = vectorStore.similaritySearch(SearchRequest.builder().query(queryToRag).topK(20).similarityThreshold(0.7).build());
         if(documents == null || documents.isEmpty()) {
-            return chatClientRequest;
+            return chatClientRequest.mutate().context("CONTEXT", "ТУТ ПУСТО").build();
         }
         String llmContext = documents.stream().map(Document::getText).collect(Collectors.joining(System.lineSeparator()));
         String finalUSerPrompt = template.render(

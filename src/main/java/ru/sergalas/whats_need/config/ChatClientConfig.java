@@ -8,11 +8,9 @@ import org.springframework.ai.chat.client.advisor.api.Advisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.ollama.api.OllamaOptions;
-import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
 import ru.sergalas.whats_need.advisers.expansion.ExpansionQueryAdviser;
 import ru.sergalas.whats_need.advisers.rag.RagAdvisor;
 import ru.sergalas.whats_need.repository.ChatRepository;
@@ -29,13 +27,16 @@ public class ChatClientConfig {
     private final ChatModel chatModel;
     private final EntryService entryService;
 
-    private static final PromptTemplate PROMPT_TEMPLATE = new PromptTemplate(
-            "{query}\n\n" +
-                    "Контекст:\n" +
-                    "---------------------\n" +
-                    "{question_answer_context}\n" +
-                    "---------------------\n\n" +
-                    "Отвечай только на основе контекста выше. Если информации нет в контексте, сообщи, что не можешь ответить."
+    private static final PromptTemplate SYSTEM_PROMPT = new PromptTemplate(
+            """
+                    Ты, Java-разработчик и эксперт по Java, Hibernate, SQl, Spring и системному дизайну.
+                    Отвечай от первого лица, кратко и по делу.
+                    Вопрос может быть о СЛЕДСТВИИ факта из Context.
+                    ВСЕГДА связывай: факт Context → вопрос.
+                    Нет связи, даже косвенной = "я не нашел это в документации"
+                    Есть связь = отвечай.
+            """
+
     );
 
     @Bean
@@ -53,15 +54,8 @@ public class ChatClientConfig {
                 .topK(4)
                 .repeatPenalty(1.1)
                 .build())
+                .defaultSystem(SYSTEM_PROMPT.render())
         .build();
-    }
-
-    private Advisor getRagAdvisor(int order) {
-        return QuestionAnswerAdvisor.builder(vectorStore)
-                .promptTemplate(PROMPT_TEMPLATE)
-                .searchRequest(SearchRequest.builder().topK(4).similarityThreshold(0.7).build())
-                .order(order)
-                .build();
     }
 
     private Advisor getHistoryAdvisor(int order) {
