@@ -8,6 +8,7 @@ import org.springframework.ai.chat.client.advisor.api.Advisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.ollama.api.OllamaOptions;
+import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,7 +46,13 @@ public class ChatClientConfig {
                 ExpansionQueryAdviser.builder(chatModel).order(0).build(),
                 getHistoryAdvisor(1),
                 SimpleLoggerAdvisor.builder().order(2).build(),
-                RagAdvisor.build(vectorStore).order(3).build(),
+                RagAdvisor.build(vectorStore).order(3)
+                    .searchRequest(
+                        SearchRequest.builder()
+                        .topK(3)
+                        .similarityThreshold(0.61)
+                        .build()
+                ).build(),
                 SimpleLoggerAdvisor.builder().order(4).build()
         )
         .defaultOptions(OllamaOptions.builder()

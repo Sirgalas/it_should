@@ -29,6 +29,9 @@ public class RagAdvisor implements BaseAdvisor {
 
     private VectorStore vectorStore;
 
+    @Builder.Default
+    private SearchRequest searchRequest = SearchRequest.builder().topK(2).similarityThreshold(0.62).build();
+
     @Getter
     private int order;
 
@@ -42,10 +45,20 @@ public class RagAdvisor implements BaseAdvisor {
     public ChatClientRequest before(ChatClientRequest chatClientRequest, AdvisorChain advisorChain) {
         String originalUserQuestion = chatClientRequest.prompt().getUserMessage().getText();
         String queryToRag = chatClientRequest.context().getOrDefault(QuestionEnum.ENRICHED_QUESTION.getValue(),originalUserQuestion).toString();
-        List<Document> documents = vectorStore.similaritySearch(SearchRequest.builder().query(queryToRag).topK(20).similarityThreshold(0.7).build());
+        List<Document> documents = vectorStore.similaritySearch(
+            SearchRequest.from(searchRequest)
+                .query(queryToRag)
+                .topK(searchRequest.getTopK()*2)
+                .similarityThreshold(searchRequest.getSimilarityThreshold())
+                .build()
+        );
         if(documents == null || documents.isEmpty()) {
             return chatClientRequest.mutate().context("CONTEXT", "ТУТ ПУСТО").build();
         }
+
+        BM25RerankEngine rerankEngine = BM25RerankEngine.builder().build();
+        rerankEngine.rerank(documents,queryToRag,searchRequest.getTopK());
+
         String llmContext = documents.stream().map(Document::getText).collect(Collectors.joining(System.lineSeparator()));
         String finalUSerPrompt = template.render(
                 Map.of("context", llmContext, "question", originalUserQuestion)

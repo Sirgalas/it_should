@@ -46,6 +46,8 @@ dependencies {
     implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
     implementation 'org.webjars:webjars-locator:0.52'
+    implementation 'com.github.pemistahl:lingua:1.2.2'
+    implementation 'org.apache.lucene:lucene-analyzers-common:8.11.4'
 
     compileOnly 'org.projectlombok:lombok'
 
